@@ -1,15 +1,17 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>GitBranchGen: Effortless Git Branch Name Generator</title>
+    <meta charset="UTF-8" />
+    <title>
+        Git Branch Gen: Simplify Your Git Workflow with Smart Branch Naming
+    </title>
     <meta name="description"
-        content="GitBranchGen simplifies your Git workflow by auto-generating readable and consistent branch names based on your input. Add a prefix, choose your separator, and ensure your branch names align with best practices effortlessly.">
-    <meta property="og:title" content="GitBranchGen: Effortless Git Branch Name Generator">
+        content="Streamline your Git process with Git Branch Gen. Generate consistent, readable branch names effortlessly. Customize prefixes, choose separators, and adhere to best practices." />
+    <meta property="og:title" content="Git Branch Gen: Simplify Your Git Workflow with Smart Branch Naming" />
     <meta property="og:description"
-        content="GitBranchGen simplifies your Git workflow by auto-generating readable and consistent branch names based on your input. Add a prefix, choose your separator, and ensure your branch names align with best practices effortlessly.">
-    <meta property="og:image" content="https://git.env.com.bd/sharing-image.png">
+        content="Streamline your Git process with Git Branch Gen. Generate consistent, readable branch names effortlessly. Customize prefixes, choose separators, and adhere to best practices." />
+    <meta property="og:image" content="https://git.env.com.bd/sharing-image.png" />
     <link rel="apple-touch-icon" sizes="57x57" href="apple-icon-57x57.png" />
     <link rel="apple-touch-icon" sizes="60x60" href="apple-icon-60x60.png" />
     <link rel="apple-touch-icon" sizes="72x72" href="apple-icon-72x72.png" />
@@ -27,63 +29,90 @@
     <meta name="msapplication-TileColor" content="#ffffff" />
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
     <meta name="theme-color" content="#ffffff" />
-    <link href="dist/main.css" rel="stylesheet">
+    <link href="dist/main.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/slugify@1.6.6/slugify.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&display=swap" rel="stylesheet" />
 </head>
 
-<body class="p-4 flex items-center justify-center min-h-screen bg-gray-100">
-    <div x-data="app()" class="space-y-4 bg-white p-6 rounded shadow-md w-full md:w-2/3 2xl:w-3/6">
-        <h1 class="text-xl font-bold mb-4 text-center">GitBranchGen: Effortless Git Branch Name Generator</h1>
+<body class="bg-gray-100">
+    <div class="flex min-h-screen items-center justify-center p-4">
+        <div x-data="app()" class="w-full max-w-lg rounded-lg bg-white p-6 shadow-lg md:p-8 lg:max-w-2xl">
+            <h1 class="mb-4 text-center text-xl font-bold text-gray-800 md:mb-6 md:text-2xl">
+                Git Branch Gen: Simplify Your Git Workflow
+            </h1>
 
-        <p class="text-sm text-gray-600">Enter your username (e.g., johndoe)</p>
+            <div class="space-y-3 md:space-y-4">
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-500" for="username">Enter your username
+                        (e.g., johndoe)</label>
+                    <input x-model="username" placeholder="Username" id="username"
+                        class="block w-full rounded border-2 border-gray-300 py-1.5 font-medium text-gray-700 shadow-sm placeholder:text-gray-400 sm:text-base sm:leading-6" />
+                </div>
 
-        <input x-model="username" placeholder="Username"
-            class="block w-full rounded border p-2 text-gray-900 shadow-sm placeholder:text-gray-500 sm:text-sm sm:leading-6" />
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-500" for="input-text">
+                        Describe the feature or fix in a short sentence (e.g., "Add login
+                        button on the homepage")
+                    </label>
+                    <textarea x-model="input" placeholder="Input Text" id="input-text"
+                        class="block w-full rounded border-2 border-gray-300 py-1.5 font-medium text-gray-700 shadow-sm placeholder:text-gray-400 sm:text-base sm:leading-6"></textarea>
+                </div>
 
-        <p class="text-sm text-gray-600">Describe the feature or fix in a short sentence (e.g., "Add login button on the
-            homepage")</p>
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-500" for="output-text">
+                        Generated Branch Name
+                    </label>
+                    <textarea @click="copyToClipboard(customSlugify(input))" x-text="customSlugify(input)"
+                        id="output-text"
+                        class="block w-full rounded border-2 border-gray-300 bg-gray-100 py-1.5 font-medium text-gray-700 shadow-sm placeholder:text-gray-400 sm:text-base sm:leading-6"
+                        placeholder="Output Slug" readonly></textarea>
+                    <p class="mb-2 mt-2 text-base text-gray-600">
+                        Example output: johndoe/add-login-button-on-the-homepage
+                    </p>
+                    <button @click="copyToClipboard(customSlugify(input))" x-bind:disabled="isCopyDisabled"
+                        x-bind:class="{'bg-gray-400 cursor-not-allowed': isCopyDisabled, 'bg-green-500 hover:bg-green-600': !isCopyDisabled}"
+                        class="mt-2 w-full rounded-md p-2 text-base text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                        Copy to clipboard
+                    </button>
+                </div>
 
-        <textarea x-model="input" placeholder="Input Text"
-            class="block w-full rounded border p-2 text-gray-900 shadow-sm placeholder:text-gray-500 sm:text-sm sm:leading-6 h-28 md:h-32"></textarea>
-        <div>
-            <textarea @click="copyToClipboard(customSlugify(input))" x-text="customSlugify(input)"
-                class="block w-full rounded border p-2 text-gray-900 shadow-sm placeholder:text-gray-500 sm:text-sm sm:leading-6 bg-gray-100 h-28 md:h-32"
-                placeholder="Output Slug" readonly></textarea>
-            <p class="text-sm text-gray-600 mt-2">Example output: johndoe/add-login-button-on-the-homepage</p>
-            <button @click="copyToClipboard(customSlugify(input))" x-bind:disabled="isCopyDisabled"
-                x-bind:class="{'bg-gray-500': isCopyDisabled, 'bg-green-500': !isCopyDisabled}"
-                class="p-2 text-white rounded w-full mt-2 text-sm">Copy to clipboard</button>
+                <div x-show="showNotification" x-text="notification"
+                    class="rounded bg-blue-500 p-2 text-base text-white"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 transform scale-90"
+                    x-transition:enter-end="opacity-100 transform scale-100"
+                    x-transition:leave="transition ease-in duration-300"
+                    x-transition:leave-start="opacity-100 transform scale-100"
+                    x-transition:leave-end="opacity-0 transform scale-90"></div>
+            </div>
+
+            <footer class="mt-6 w-full text-center">
+                <p class="text-base font-medium text-gray-600">
+                    &copy; <span x-text="new Date().getFullYear()"></span>
+                    <a href="https://devops.com.bd" target="_blank" rel="noopener noreferrer"
+                        class="text-green-600">DevOps</a>
+                    &
+                    <a href="https://github.com/SHSharkar" target="_blank" rel="noopener noreferrer"
+                        class="text-indigo-600">Md. Sazzad Hossain Sharkar</a>
+                </p>
+            </footer>
         </div>
-        <div x-show="showNotification" x-text="notification" class="p-2 bg-blue-500 text-white rounded text-sm"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 transform scale-90"
-            x-transition:enter-end="opacity-100 transform scale-100"
-            x-transition:leave="transition ease-in duration-300"
-            x-transition:leave-start="opacity-100 transform scale-100"
-            x-transition:leave-end="opacity-0 transform scale-90"></div>
     </div>
-    <footer class="mt-10 text-center absolute bottom-0 w-full">
-        <p>&copy; {{current_year}} <a href="https://devops.com.bd" target="_blank" rel="noopener noreferrer"
-                class="text-green-600">DevOps</a> &
-            <a href="https://github.com/SHSharkar" target="_blank" rel="noopener noreferrer" class="text-indigo-600">Md.
-                Sazzad Hossain Sharkar</a>
-        </p>
-    </footer>
+
     <script>
         function app() {
             return {
-                input: '',
-                separator: '-',
-                caseType: 'lower',
+                input: "",
+                separator: "-",
+                caseType: "lower",
                 showNotification: false,
-                notification: '',
-                username: '',
+                notification: "",
+                username: "",
                 init() {
-                    this.username = localStorage.getItem('username') || '';
+                    this.username = localStorage.getItem("username") || "";
                 },
                 get isCopyDisabled() {
                     return !this.input || !this.customSlugify(this.input);
@@ -93,34 +122,29 @@
                     const options = {
                         replacement: this.separator,
                         remove: null,
-                        lower: this.caseType === 'lower'
+                        lower: this.caseType === "lower",
                     };
                     const slugified = slugify(cleanStr, options);
                     return this.username ? this.username + "/" + slugified : slugified;
                 },
                 copyToClipboard(text) {
                     if (!text) return;
-                    navigator.clipboard.writeText(text).then(() => {
-                        this.notification = 'Copied to clipboard!';
-                        this.showNotification = true;
-                        localStorage.setItem('username', this.username);
-                        setTimeout(() => this.showNotification = false, 1000);
-                    }).catch(() => {
-                        this.notification = 'Failed to copy!';
-                        this.showNotification = true;
-                        setTimeout(() => this.showNotification = false, 1000);
-                    });
-                }
-            }
+                    navigator.clipboard
+                        .writeText(text)
+                        .then(() => {
+                            this.notification = "Copied to clipboard!";
+                            this.showNotification = true;
+                            localStorage.setItem("username", this.username);
+                            setTimeout(() => (this.showNotification = false), 1000);
+                        })
+                        .catch(() => {
+                            this.notification = "Failed to copy!";
+                            this.showNotification = true;
+                            setTimeout(() => (this.showNotification = false), 1000);
+                        });
+                },
+            };
         }
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const footer = document.querySelector('footer p');
-            const year = new Date().getFullYear();
-            footer.innerHTML = footer.innerHTML.replace('{{current_year}}', year);
-        });
     </script>
 </body>
 
